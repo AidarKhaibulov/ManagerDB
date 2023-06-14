@@ -1,0 +1,14 @@
+### generate product
+POST http://localhost:8080/generate/product
+
+### generate user
+POST http://localhost:8080/generate/user
+
+### generate n products
+POST http://localhost:8080/generate/product/3
+
+### generate n users
+POST http://localhost:8080/generate/user/3
+
+### copy db
+POST http://localhost:8080/generate/copyDB
