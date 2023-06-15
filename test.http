@@ -10,5 +10,12 @@ POST http://localhost:8080/generate/product/3
 ### generate n users
 POST http://localhost:8080/generate/user/3
 
+
+
+
 ### copy db
-POST http://localhost:8080/generate/copyDB
+POST http://localhost:8080/backup/copyDB
+
+
+### restore db
+POST http://localhost:8080/backup/restoreDB/dump.sql

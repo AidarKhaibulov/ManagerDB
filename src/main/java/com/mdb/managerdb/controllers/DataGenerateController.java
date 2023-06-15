@@ -1,9 +1,9 @@
-package com.mdb.managerdb;
+package com.mdb.managerdb.controllers;
 
 import com.mdb.managerdb.entities.Product;
 import com.mdb.managerdb.entities.UserEntity;
 import com.mdb.managerdb.services.AutoDataGenerator;
-import com.mdb.managerdb.services.DatabaseCopier;
+import com.mdb.managerdb.services.DatabaseBackupManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import java.util.List;
 @RequestMapping("/generate")
 @RequiredArgsConstructor
 @Slf4j
-public class ApiController {
+public class DataGenerateController {
     private final AutoDataGenerator autoDataGenerator;
-    private final DatabaseCopier databaseCopier;
+
     @PostMapping("/product")
     public ResponseEntity<Product> generateProduct() {
         return ResponseEntity.ok(autoDataGenerator.generateData(Product.class));
@@ -37,9 +37,5 @@ public class ApiController {
     public ResponseEntity<List<UserEntity>> generateManyUsers(@PathVariable int numberOfRows) {
         return ResponseEntity.ok(autoDataGenerator.generateMultipleData(UserEntity.class,numberOfRows));
     }
-    @PostMapping("/copyDB")
-    public ResponseEntity<String> copyDB() {
-        databaseCopier.copyDB();
-        return ResponseEntity.ok("Copied!");
-    }
+
 }

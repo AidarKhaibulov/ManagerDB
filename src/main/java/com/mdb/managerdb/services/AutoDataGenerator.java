@@ -61,7 +61,7 @@ public class AutoDataGenerator {
                 }
             }
             default -> {
-                return null;
+                throw new RuntimeException("Invalid class");
             }
         }
 
