@@ -5,10 +5,48 @@ POST http://localhost:8080/generate/product
 POST http://localhost:8080/generate/user
 
 ### generate n products
-POST http://localhost:8080/generate/product/3
+POST http://localhost:8080/generate/product/5000
 
 ### generate n users
-POST http://localhost:8080/generate/user/3
+POST http://localhost:8080/generate/user/1000
+
+### 2 task: data generation measurement plot
+GET http://localhost:8080/generate/data-generation-plot
+
+
+
+
+
+### 3 task: select queries execution measurement plot for users
+GET http://localhost:8080/queries/query-execute-plot/select
+Content-Type: application/json
+
+user
+
+### 3 task: select queries execution measurement plot for products
+GET http://localhost:8080/queries/query-execute-plot/select
+Content-Type: application/json
+
+product
+
+### 3 task: delete queries execution measurement plot for products
+GET http://localhost:8080/queries/query-execute-plot/delete
+Content-Type: application/json
+
+user
+
+### 3 task: insert queries execution measurement plot for products
+GET http://localhost:8080/queries/query-execute-plot/insert
+Content-Type: application/json
+
+user
+
+### 3 task: insert queries execution measurement plot for products
+GET http://localhost:8080/queries/query-execute-plot/insert
+Content-Type: application/json
+
+product
+
 
 
 
@@ -16,6 +54,60 @@ POST http://localhost:8080/generate/user/3
 ### copy db
 POST http://localhost:8080/backup/copyDB
 
-
 ### restore db
 POST http://localhost:8080/backup/restoreDB/dump.sql
+
+
+
+
+### clear user table
+POST http://localhost:8080/manage/user
+
+### clear product table
+POST http://localhost:8080/manage/product
+
+### replace product data
+POST http://localhost:8080/manage/replaceProduct
+Content-Type: application/json
+
+[
+  {
+    "description": "хорошие ботинки",
+    "title": "ботинки",
+    "price": 12.3,
+    "platform": "platform"
+  },
+  {
+    "description": "хорошие ролики",
+    "title": "ролики",
+    "price": 12.3,
+    "platform": "platform"
+  }
+]
+
+### replace product data
+POST http://localhost:8080/manage/replaceUser
+Content-Type: application/json
+
+[
+  {
+    "username": "Sayl",
+    "email": "sayl@email.com",
+    "password": "examplePassword"
+  },
+  {
+    "username": "Kandid",
+    "email": "kandid@email.com",
+    "password": "superSecretPassword"
+  }
+]
+
+
+
+### measure query executing time
+POST  http://localhost:8080/queries/executeQuery
+Content-Type: application/json
+
+SELECT * FROM users;
+SELECT * FROM users;
+SELECT * FROM users;

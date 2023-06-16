@@ -41,7 +41,7 @@ public class AutoDataGenerator {
         return switch (dataType.getSimpleName()) {
             case "UserEntity" -> dataType.cast(generateUser());
             case "Product" -> dataType.cast(generateProduct());
-            default -> null;
+            default -> throw new RuntimeException("Invalid class");
         };
     }
 
