@@ -57,6 +57,9 @@ GET http://localhost:8080/task4/bInsert
 ### 4 task: select data
 GET http://localhost:8080/task4/bSelect
 
+### 4 task: table sizes chart
+GET http://localhost:8080/task4/c
+
 
 
 

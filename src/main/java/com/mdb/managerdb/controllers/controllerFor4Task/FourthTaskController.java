@@ -16,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,6 +61,7 @@ public class FourthTaskController {
     @Autowired
     private final E5Repository e5Repository;
     private final FifthTaskController fifthTaskController;
+    private final JdbcTemplate jdbcTemplate;
 
     @GetMapping("/bInsert")
     public ResponseEntity<String> bInsert() {
@@ -104,6 +107,69 @@ public class FourthTaskController {
         try {
             ChartUtils.saveChartAsPNG(new File("4_task_select.png"), chart, 1920, 1080);
             System.out.println("График сохранен в файле");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok("Created");
+    }
+
+    @GetMapping("/c")
+    public ResponseEntity<String> c() {
+        String sql = "SELECT pg_total_relation_size('employees_1nf')";
+        long v1 = jdbcTemplate.queryForObject(sql, Long.class);
+
+        sql = "SELECT pg_total_relation_size('employees_2nf')";
+        long v2 = jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('employees_details_2nf')";
+        v2+=jdbcTemplate.queryForObject(sql, Long.class);
+
+        sql = "SELECT pg_total_relation_size('employees_3nf')";
+        long v3 = jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('employee_details_3nf')";
+        v3+=jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('positions3nf')";
+        v3+=jdbcTemplate.queryForObject(sql, Long.class);
+
+        sql = "SELECT pg_total_relation_size('employees_4nf')";
+        long v4 = jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('employee_details_4nf')";
+        v4+=jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('positions4nf')";
+        v4+=jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('employee_salaries_4nf')";
+        v4+=jdbcTemplate.queryForObject(sql, Long.class);
+
+        sql = "SELECT pg_total_relation_size('employees_5nf')";
+        long v5 = jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('employee_details_5nf')";
+        v5+=jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('positions4nf')";
+        v5+=jdbcTemplate.queryForObject(sql, Long.class);
+        sql = "SELECT pg_total_relation_size('employee_salaries_5nf')";
+        v5+=jdbcTemplate.queryForObject(sql, Long.class);
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(v1, "Table 1", "");
+        dataset.addValue(v2, "Table 2", "");
+        dataset.addValue(v3, "Table 3", "");
+        dataset.addValue(v4, "Table 4", "");
+        dataset.addValue(v5, "Table 5", "");
+
+        // Создание графика
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Размеры таблиц",  // Заголовок графика
+                "",                // Метка оси X
+                "Размер",          // Метка оси Y
+                dataset,           // Данные для графика
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        // Сохранение графика в файл
+        try {
+            ChartUtils.saveChartAsPNG(new File("tableSizes.png"), chart, 800, 600);
         } catch (IOException e) {
             e.printStackTrace();
         }
