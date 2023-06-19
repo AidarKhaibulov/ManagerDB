@@ -1,8 +1,6 @@
 package com.mdb.managerdb.services;
 
 import com.mdb.managerdb.entities.*;
-import com.mdb.managerdb.repositories.*;
-import com.mdb.managerdb.services.AutoDataGenerator;
 import lombok.RequiredArgsConstructor;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -15,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 @RequiredArgsConstructor
@@ -33,28 +32,40 @@ public class ChartBuilder {
         }
     }
 
-    public JFreeChart createPlot(DefaultCategoryDataset dataset) {
+    public JFreeChart createPlot(DefaultCategoryDataset dataset,String title,String X) {
         JFreeChart plot = ChartFactory.createLineChart(
-                "Data Generation Time",
-                "X",
+                title,
+                X,
                 "Time (ms)",
                 dataset
         );
         return plot;
     }
 
-    public DefaultCategoryDataset createDataForPlot(Map<String, Long> data) {
+    public DefaultCategoryDataset createDataForPlot(TreeMap<Integer, Long> data) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for (Map.Entry<String, Long> entry : data.entrySet()) {
-            String xValue = entry.getKey();
+        for (Map.Entry<Integer, Long> entry : data.entrySet()) {
+            Integer xValue = entry.getKey();
             Long yValue = entry.getValue();
             dataset.addValue(yValue, "Time", xValue);
         }
         return dataset;
     }
 
-    public Map<String, Long> createRawData() {
-        Map<String, Long> data = new HashMap<>();
+    public DefaultCategoryDataset createDoubleData(TreeMap<Integer, Long> data1, TreeMap<Integer, Long> data2, String t1, String t2) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<Integer, Long> entry : data1.entrySet()) {
+            dataset.addValue(entry.getValue(), t1, entry.getKey());
+        }
+
+        for (Map.Entry<Integer, Long> entry : data2.entrySet()) {
+            dataset.addValue(entry.getValue(), t2, entry.getKey());
+        }
+        return dataset;
+    }
+
+    public TreeMap<Integer, Long> createRawData() {
+        TreeMap<Integer, Long> data = new TreeMap<>();
         long totalTime = 0;
         for (int rowCount = 100; rowCount <= 1000; rowCount += 100) {
             long startTime = System.currentTimeMillis();
@@ -62,13 +73,13 @@ public class ChartBuilder {
             long endTime = System.currentTimeMillis();
             long executionTime = endTime - startTime;
             totalTime += executionTime;
-            data.put(String.valueOf(rowCount), totalTime);
+            data.put(rowCount, totalTime);
         }
         return data;
     }
 
-    public Map<String, Long> createRawQueryData(String tableName, String queryType) {
-        Map<String, Long> timings = new HashMap<>();
+    public TreeMap<Integer, Long> createRawQueryData(String tableName, String queryType) {
+        TreeMap<Integer, Long> timings = new TreeMap<>();
         long totalTime = 0;
         String sql = "";
         for (int rowCount = 100; rowCount <= 1000; rowCount += 100) {
@@ -81,7 +92,7 @@ public class ChartBuilder {
                     long endTime = System.nanoTime();
                     long executionTime = endTime - startTime;
                     totalTime += executionTime;
-                    timings.put(String.valueOf(rowCount), totalTime);
+                    timings.put(rowCount, totalTime);
                 }
                 case "insert" -> {
                     startTime = System.nanoTime();
@@ -90,12 +101,13 @@ public class ChartBuilder {
                         case "products" -> dataGenerator.generateMultipleData(Product.class, 100);
                         case "category" -> dataGenerator.generateMultipleData(Category.class, 100);
                         case "cart" -> dataGenerator.generateMultipleData(Cart.class, 100);
-                        case "recentlyWatchedProduct" -> dataGenerator.generateMultipleData(RecentlyWatchedProduct.class, 100);
+                        case "recentlyWatchedProduct" ->
+                                dataGenerator.generateMultipleData(RecentlyWatchedProduct.class, 100);
                     }
                     long endTime = System.nanoTime();
                     long executionTime = endTime - startTime;
                     totalTime += executionTime;
-                    timings.put(String.valueOf(rowCount), totalTime);
+                    timings.put(rowCount, totalTime);
                 }
                 case "delete" -> {
                     startTime = System.nanoTime();
@@ -104,7 +116,7 @@ public class ChartBuilder {
                     long endTime = System.nanoTime();
                     long executionTime = endTime - startTime;
                     totalTime += executionTime;
-                    timings.put(String.valueOf(rowCount), totalTime);
+                    timings.put(rowCount, totalTime);
                 }
             }
         }

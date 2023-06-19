@@ -11,9 +11,9 @@ public class DatabaseBackupManager {
     String port = "5432";
 
     String database = "aidar";
-    @Value("${PDB_USERNAME}")
+    @Value("${PDB_USERNAME:aidar}")
     String username;
-    @Value("${PDB_PASSWORD}")
+    @Value("${PDB_PASSWORD:sitis}")
     String password;
     String dumpFilePath = "dump.sql";
 
@@ -44,7 +44,33 @@ public class DatabaseBackupManager {
             e.printStackTrace();
         }
     }
+    public void sandbox() {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    "pg_dump",
+                    "-h", host,
+                    "-p", port,
+                    "-U", username,
+                    "-F", "p",
+                    "-s",
+                    "-v",
+                    "-f", "sandbox.sql",
+                    database
+            );
 
+            processBuilder.environment().put("PGPASSWORD", password);
+            Process process = processBuilder.start();
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Песочница базы данных успешно создан");
+            } else {
+                System.err.println("Ошибка при создании песочницы базы данных!");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public void restoreDB(String dumpFilePath) {
 
         try {

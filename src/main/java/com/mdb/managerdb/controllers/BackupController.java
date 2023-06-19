@@ -20,6 +20,11 @@ public class BackupController {
         databaseCopier.copyDB();
         return ResponseEntity.ok("Copied!");
     }
+    @PostMapping("/sandbox")
+    public ResponseEntity<String> sandbox() {
+        databaseCopier.sandbox();
+        return ResponseEntity.ok("Copied!");
+    }
     @PostMapping("/restoreDB/{scriptPath}")
     public ResponseEntity<String> restoreDB(@PathVariable String scriptPath) {
         databaseCopier.restoreDB(scriptPath);

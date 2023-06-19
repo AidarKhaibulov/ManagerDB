@@ -35,7 +35,7 @@ Content-Type: application/json
 
 user
 
-### 3 task: insert queries execution measurement plot for products
+### 3 task: insert queries execution measurement plot for users
 GET http://localhost:8080/queries/query-execute-plot/insert
 Content-Type: application/json
 
@@ -51,8 +51,20 @@ product
 
 
 
+### 4 task: insert data
+GET http://localhost:8080/task4/bInsert
+
+### 4 task: select data
+GET http://localhost:8080/task4/bSelect
+
+
+
+
 ### copy db
 POST http://localhost:8080/backup/copyDB
+
+### sandbox
+POST http://localhost:8080/backup/sandbox
 
 ### restore db
 POST http://localhost:8080/backup/restoreDB/dump.sql
@@ -111,3 +123,21 @@ Content-Type: application/json
 SELECT * FROM users;
 SELECT * FROM users;
 SELECT * FROM users;
+
+
+
+
+
+### 5 task: a1
+GET http://localhost:8080/task5/a1
+
+### 5 task: a2
+GET http://localhost:8080/task5/a2
+
+### 5 task: b1
+GET http://localhost:8080/task5/b1
+
+### 5 task: b2
+GET http://localhost:8080/task5/b2
+
+

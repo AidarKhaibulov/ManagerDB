@@ -14,6 +14,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/generate")
@@ -40,11 +41,11 @@ public class GenerateController {
         return ResponseEntity.ok(autoDataGenerator.generateMultipleData(UserEntity.class,numberOfRows));
     }
     @GetMapping("/data-generation-plot")
-    public ResponseEntity<Map<String, Long>> generateData() {
-        Map<String, Long> data = chartBuilder.createRawData();
+    public ResponseEntity<TreeMap<Integer, Long>> generateData() {
+        TreeMap<Integer, Long> data = chartBuilder.createRawData();
 
         DefaultCategoryDataset dataset = chartBuilder.createDataForPlot(data);
-        JFreeChart plot = chartBuilder.createPlot(dataset);
+        JFreeChart plot = chartBuilder.createPlot(dataset,"Data Generation Time","X");
         chartBuilder.savePlot(plot,"data_generation_chart.png");
 
         return ResponseEntity.ok(data);

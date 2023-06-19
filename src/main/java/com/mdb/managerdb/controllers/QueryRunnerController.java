@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/queries")
@@ -38,30 +39,30 @@ public class QueryRunnerController {
 
 
     @GetMapping(value = "/query-execute-plot/{queryType}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> createQueryExecutePlotForInsert(@RequestBody String className, @PathVariable String queryType) {
+    public ResponseEntity<TreeMap<Integer, Long>> createQueryExecutePlotForInsert(@RequestBody String className, @PathVariable String queryType) {
         switch (className) {
             case "user" -> {
-                Map<String, Long> data = chartBuilder.createRawQueryData("users",queryType);
+                TreeMap<Integer, Long> data = chartBuilder.createRawQueryData("users",queryType);
                 createPlot(data,queryType);
                 return ResponseEntity.ok(data);
             }
             case "product" -> {
-                Map<String, Long> data = chartBuilder.createRawQueryData("products",queryType);
+                TreeMap<Integer, Long> data = chartBuilder.createRawQueryData("products",queryType);
                 createPlot(data,queryType);
                 return ResponseEntity.ok(data);
             }
             case "category" -> {
-                Map<String, Long> data = chartBuilder.createRawQueryData("categories",queryType);
+                TreeMap<Integer, Long> data = chartBuilder.createRawQueryData("categories",queryType);
                 createPlot(data,queryType);
                 return ResponseEntity.ok(data);
             }
             case "cart" -> {
-                Map<String, Long> data = chartBuilder.createRawQueryData("carts",queryType);
+                TreeMap<Integer, Long> data = chartBuilder.createRawQueryData("carts",queryType);
                 createPlot(data,queryType);
                 return ResponseEntity.ok(data);
             }
             case "recentlyWatchedProduct" -> {
-                Map<String, Long> data = chartBuilder.createRawQueryData("recently_watched_products",queryType);
+                TreeMap<Integer, Long> data = chartBuilder.createRawQueryData("recently_watched_products",queryType);
                 createPlot(data,queryType);
                 return ResponseEntity.ok(data);
             }
@@ -69,9 +70,9 @@ public class QueryRunnerController {
         }
     }
 
-    private void createPlot(Map<String, Long> data,String queryType) {
+    private void createPlot(TreeMap<Integer, Long> data,String queryType) {
         DefaultCategoryDataset dataset = chartBuilder.createDataForPlot(data);
-        JFreeChart plot = chartBuilder.createPlot(dataset);
+        JFreeChart plot = chartBuilder.createPlot(dataset,"Data Generation Time","X");
         chartBuilder.savePlot(plot, queryType+".png");
     }
 }
